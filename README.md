@@ -1,9 +1,8 @@
 # Naelora - Aplikasi Cuaca Terkini (Weather App)
-> Proyek Responsi Praktikum Pemrograman Bergerak (Flutter)
 
 ---
 
-## 👤 Identitas Mahasiswa
+## Identitas Mahasiswa
 
 | Informasi | Keterangan |
 | :--- | :--- |
@@ -16,23 +15,30 @@
 
 ---
 
-## 📱 Tangkapan Layar Aplikasi (Screenshots)
+## Tangkapan Layar Aplikasi (Screenshots)
 
 Berikut adalah dokumentasi visual dari setiap layar (*screen*) dan fitur utama aplikasi Naelora:
 
 | 1. Home / Weather Screen | 2. Detail & Saran Cuaca |
 | :---: | :---: |
-| ![Home Screen](assets/screenshots/01_home_screen.png)<br>*Tampilan utama cuaca terkini & hero card* | ![Detail Cuaca](assets/screenshots/02_detail_saran.png)<br>*4 Grid Metrik & Kartu Saran Hari Ini* |
+| <img width="1080" height="2400" alt="Screenshot_20261126_003331" src="https://github.com/user-attachments/assets/2eb933c6-d54c-470d-93da-9e7bc4839690" />
+ | <img width="1080" height="2400" alt="Screenshot_20261126_010229" src="https://github.com/user-attachments/assets/efa76b84-a31a-479b-af6b-ce53e53a3998" />
+ <img width="1080" height="2400" alt="Screenshot_20261126_003431" src="https://github.com/user-attachments/assets/3f28f3ff-2d06-4138-865d-291185cf7f94" />
+
+ |
 
 | 3. Cari Kota & Hasil API | 4. Kota Favorit & Pengaturan |
 | :---: | :---: |
-| ![Search Screen](assets/screenshots/03_search_screen.png)<br>*Pencarian kota live Geocoding API & riwayat* | ![Favorites & Settings](assets/screenshots/04_favorites_settings.png)<br>*Kelola kota favorit & menu pengaturan unit* |
+| <img width="1080" height="2400" alt="Screenshot_20261126_003451" src="https://github.com/user-attachments/assets/aa2102ee-0a98-44b1-86a8-35934626dc8c" />
+<img width="1080" height="2400" alt="Screenshot_20261126_003506" src="https://github.com/user-attachments/assets/3f76c691-3e74-4f90-a2aa-3f64ab98cc7c" />
 
-> *Catatan: Letakkan file gambar screenshot pada folder `assets/screenshots/` dengan penamaan file di atas agar otomatis tampil di GitHub.*
+ | <img width="1080" height="2400" alt="Screenshot_20261126_010453" src="https://github.com/user-attachments/assets/bd2edecd-c099-4acb-aee4-0f80670f7024" />
+<img width="1080" height="2400" alt="Screenshot_20261126_003530" src="https://github.com/user-attachments/assets/ebeff259-015d-44d0-a428-14509cdb62c6" />
+|
 
 ---
 
-## 🏛️ Penerapan Pola Arsitektur MVVM (Model-View-ViewModel)
+## Penerapan Pola Arsitektur MVVM (Model-View-ViewModel)
 
 Aplikasi Naelora dibangun dengan menerapkan standar arsitektur **Model-View-ViewModel (MVVM)** menggunakan pustaka **Provider (`ChangeNotifier`)** sebagai pengendali state reaktif. Arsitektur ini memisahkan kode menjadi lapisan-lapisan yang independen dan modular:
 
@@ -87,7 +93,7 @@ Antarmuka pengguna berbasis Flutter Material 3 yang bersifat reaktif:
 
 ---
 
-## 🌐 Implementasi REST API (Open-Meteo)
+## Implementasi REST API (Open-Meteo)
 
 Aplikasi Naelora terhubung langsung secara *live* dengan **Open-Meteo REST API** (tanpa API key):
 
@@ -126,7 +132,7 @@ Aplikasi Naelora terhubung langsung secara *live* dengan **Open-Meteo REST API**
 
 ---
 
-## 📂 Struktur Direktori Proyek
+## Struktur Direktori Proyek
 
 ```
 weather_app/
@@ -172,7 +178,7 @@ weather_app/
 
 ---
 
-## 🚀 Panduan Menjalankan Aplikasi
+## Panduan Menjalankan Aplikasi
 
 1. **Clone Repository**:
    ```bash
