@@ -1,115 +1,128 @@
 # Naelora - Aplikasi Cuaca Terkini (Weather App)
-
-**Naelora** adalah aplikasi perkiraan cuaca modern berbasis Flutter yang terintegrasi langsung secara *live* dengan REST API **Open-Meteo** (Forecast & Geocoding API). Aplikasi ini dibangun dengan menerapkan standar arsitektur **Model-View-ViewModel (MVVM)**, manajemen state reaktif menggunakan **Provider**, serta penyimpanan lokal data favorit dan riwayat menggunakan **SharedPreferences**.
-
----
-
-## 📱 Tangkapan Layar (Screenshots)
-
-| Home / Weather Screen | Search / Location Screen | Detail Cuaca & Favorit |
-| :---: | :---: | :---: |
-| *(Letakkan screenshot Home di sini)*<br>`assets/screenshots/home_screen.png` | *(Letakkan screenshot Search di sini)*<br>`assets/screenshots/search_screen.png` | *(Letakkan screenshot Favorit di sini)*<br>`assets/screenshots/favorites_tab.png` |
-
-> *Tip: Simpan gambar screenshot hasil running pada folder `assets/screenshots/` dan tautkan ke README.*
+> Proyek Responsi Praktikum Pemrograman Bergerak (Flutter)
 
 ---
 
-## 🌟 Fitur Utama Sesuai Ketentuan Responsi
+## 👤 Identitas Mahasiswa
 
-### 1. Home / Weather Screen
-- **Nama Kota Terpilih**: Menampilkan nama lokasi aktif saat ini (disimpan otomatis untuk dimuat kembali ketika aplikasi dibuka ulang).
-- **Kondisi Cuaca Terkini**: Menampilkan status cuaca dinamis (Cerah, Berawan, Hujan, Badai Petir, dll.) sesuai WMO Weather Interpretation Code dengan latar belakang gradien adaptif.
-- **Suhu Saat Ini**: Menampilkan suhu real-time dalam derajat Celsius (°C) dari `current.temperature_2m`.
-- **Detail Metrik Tambahan**:
-  - Suhu yang dirasakan (*feels like*) (`current.apparent_temperature`)
-  - Kelembapan udara (`current.relative_humidity_2m` %)
-  - Kecepatan angin (`current.wind_speed_10m` km/j)
-  - Curah hujan (`current.precipitation` mm)
-  - Peluang hujan maksimum harian (`daily.precipitation_probability_max` %)
-- **Perkiraan Cuaca Harian**: Ramalan cuaca 7 hari ke depan dengan info hari, tanggal, ikon cuaca, suhu maksimum & minimum (`daily.temperature_2m_max` & `daily.temperature_2m_min`), serta kemungkinan hujan.
-- **Quick Favorites Chips**: Akses instan berpindah antar kota favorit hanya dengan satu ketukan.
-- **Pull to Refresh**: Geser ke bawah untuk memperbarui data cuaca terkini secara real-time.
-- **Handling Lengkap**: Indikator loading halus, empty state, dan tampilan error responsif dengan tombol "Coba Lagi".
-
-### 2. Search / Location Screen
-- **Pencarian Kota Real-time**: Input teks dilengkapi sistem *debounce* untuk melakukan *request* ke Open-Meteo Geocoding API.
-- **Daftar Hasil Pencarian**: Menampilkan daftar kota beserta provinsi dan negara.
-- **Penyimpanan Favorit**: Tombol bintang untuk menandai atau membatalkan kota favorit (tersimpan persisten di Local Storage).
-- **Riwayat Pencarian**: Menyimpan riwayat lokasi yang pernah dipilih, dapat dihapus per-item maupun dikosongkan sekaligus.
-- **Pemilihan Lokasi**: Memilih lokasi akan langsung mengalihkan aplikasi ke Home Screen dan memperbarui data cuaca kota tersebut.
+| Informasi | Keterangan |
+| :--- | :--- |
+| **Nama Lengkap** | Naila Alifatul |
+| **NIM** | H1D024043 |
+| **Program Studi** | Informatika |
+| **Fakultas** | Fakultas Teknik |
+| **Mata Kuliah** | Praktikum Pemrograman Bergerak |
+| **Tautan Repository** | [https://github.com/nailaalifatull/H1D024043-responsi-naelora](https://github.com/nailaalifatull/H1D024043-responsi-naelora) |
 
 ---
 
-## 🏛️ Arsitektur Aplikasi (MVVM Pattern)
+## 📱 Tangkapan Layar Aplikasi (Screenshots)
 
-Aplikasi Naelora memisahkan kode secara modular dan bersih ke dalam 3 lapisan arsitektur:
+Berikut adalah dokumentasi visual dari setiap layar (*screen*) dan fitur utama aplikasi Naelora:
+
+| 1. Home / Weather Screen | 2. Detail & Saran Cuaca |
+| :---: | :---: |
+| ![Home Screen](assets/screenshots/01_home_screen.png)<br>*Tampilan utama cuaca terkini & hero card* | ![Detail Cuaca](assets/screenshots/02_detail_saran.png)<br>*4 Grid Metrik & Kartu Saran Hari Ini* |
+
+| 3. Cari Kota & Hasil API | 4. Kota Favorit & Pengaturan |
+| :---: | :---: |
+| ![Search Screen](assets/screenshots/03_search_screen.png)<br>*Pencarian kota live Geocoding API & riwayat* | ![Favorites & Settings](assets/screenshots/04_favorites_settings.png)<br>*Kelola kota favorit & menu pengaturan unit* |
+
+> *Catatan: Letakkan file gambar screenshot pada folder `assets/screenshots/` dengan penamaan file di atas agar otomatis tampil di GitHub.*
+
+---
+
+## 🏛️ Penerapan Pola Arsitektur MVVM (Model-View-ViewModel)
+
+Aplikasi Naelora dibangun dengan menerapkan standar arsitektur **Model-View-ViewModel (MVVM)** menggunakan pustaka **Provider (`ChangeNotifier`)** sebagai pengendali state reaktif. Arsitektur ini memisahkan kode menjadi lapisan-lapisan yang independen dan modular:
 
 ```
-                  ┌───────────────────────────────┐
-                  │          VIEW (UI)            │
-                  │  HomeScreen, SearchScreen,    │
-                  │  MetricCard, DailyForecast    │
-                  └──────────────▲────────────────┘
-                                 │ Observes &
-                                 │ Dispatches Actions
-                  ┌──────────────┴────────────────┐
-                  │       VIEWMODEL (State)       │
-                  │       WeatherViewModel        │
-                  │   (ChangeNotifier & Provider) │
-                  └───────┬───────────────┬───────┘
-     Calls API            │               │  Reads / Writes
-     Requests             ▼               ▼  Local Cache
-       ┌──────────────────────┐      ┌──────────────────────┐
-       │   WeatherApiService  │      │    StorageService    │
-       │   (Open-Meteo REST)  │      │ (SharedPreferences)  │
-       └──────────┬───────────┘      └──────────┬───────────┘
-                  │ Maps JSON                   │ Serializes
-                  ▼                             ▼
-       ┌────────────────────────────────────────────────────┐
-       │                   MODEL LAYER                      │
-       │     WeatherData, CurrentWeather, DailyForecast,     │
-       │                   LocationModel                    │
-       └────────────────────────────────────────────────────┘
+                  ┌───────────────────────────────────────────┐
+                  │                VIEW (UI)                  │
+                  │  HomeScreen, SearchScreen,                │
+                  │  FavoritesScreen, SettingsScreen          │
+                  └─────────────────────▲─────────────────────┘
+                                        │ Observes State &
+                                        │ Dispatches Events
+                  ┌─────────────────────┴─────────────────────┐
+                  │             VIEWMODEL (State)             │
+                  │             WeatherViewModel              │
+                  │        (ChangeNotifier & Provider)        │
+                  └──────────┬─────────────────────┬──────────┘
+           Calls API Request │                     │ Reads / Writes
+                             ▼                     ▼ Local Cache
+        ┌─────────────────────────┐   ┌─────────────────────────┐
+        │    WeatherApiService    │   │     StorageService      │
+        │    (Open-Meteo REST)    │   │   (SharedPreferences)   │
+        └────────────┬────────────┘   └────────────┬────────────┘
+         Maps JSON   │                 Serializes  │
+                     ▼                             ▼
+        ┌───────────────────────────────────────────────────────┐
+        │                      MODEL LAYER                      │
+        │       WeatherData, CurrentWeather, DailyForecast,     │
+        │                      LocationModel                    │
+        └───────────────────────────────────────────────────────┘
 ```
 
-1. **Model Layer (`lib/models/`)**:
-   - `LocationModel`: Representasi entitas lokasi geocoding dengan dukungan serialisasi JSON (`toJson`, `fromJson`, `toJsonString`, `fromJsonString`).
-   - `WeatherModel`: Entitas cuaca terkini (`CurrentWeather`), ramalan harian (`DailyForecast`), dan wrapper `WeatherData`.
+### 1. Model Layer (`lib/models/`)
+Mendefinisikan entitas data murni dan memetakan serialisasi data:
+- `LocationModel` ([lib/models/location_model.dart](lib/models/location_model.dart)): Memodelkan entitas kota dari Geocoding API (nama, koordinat lintang/bujur, provinsi, negara) serta serialisasi JSON String untuk disimpan ke Local Storage.
+- `WeatherModel` ([lib/models/weather_model.dart](lib/models/weather_model.dart)): 
+  - `CurrentWeather`: Memetakan data cuaca terkini (`temperature_2m`, `relative_humidity_2m`, `apparent_temperature`, `precipitation`, `weather_code`, `wind_speed_10m`).
+  - `DailyForecast`: Memetakan data ramalan harian 7 hari (`temperature_2m_max`, `temperature_2m_min`, `precipitation_probability_max`).
+  - `WeatherData`: Wrapper utama yang menaungi data cuaca terkini dan daftar perkiraan harian.
 
-2. **Service Layer (`lib/services/`)**:
-   - `WeatherApiService`: Bertanggung jawab atas HTTP GET request ke Open-Meteo REST API dengan penanganan timeout, validasi status code HTTP, dan pengecekan koneksi (`SocketException`).
-   - `StorageService`: Mengelola penyimpanan lokal data favorit, riwayat pencarian, dan lokasi terakhir dengan `shared_preferences`.
+### 2. Service Layer (`lib/services/`)
+Bertanggung jawab atas komunikasi eksternal dan isolasi I/O:
+- `WeatherApiService` ([lib/services/weather_api_service.dart](lib/services/weather_api_service.dart)): Menjalankan HTTP GET request ke Open-Meteo REST API, menangani validasi status kode HTTP, batas waktu (*timeout* 12 detik), dan proteksi putus koneksi (*SocketException*).
+- `StorageService` ([lib/services/storage_service.dart](lib/services/storage_service.dart)): Mengelola penyimpanan data lokal persisten berbasis `SharedPreferences` untuk menyimpan daftar lokasi favorit, riwayat pencarian, dan lokasi aktif terakhir.
 
-3. **ViewModel Layer (`lib/viewmodels/`)**:
-   - `WeatherViewModel`: Mewarisi `ChangeNotifier` untuk mengontrol alur data, memicu pembaruan UI via `notifyListeners()`, mengelola status cuaca (`WeatherStatus`), status pencarian (`SearchStatus`), serta koordinasi antar service.
+### 3. ViewModel Layer (`lib/viewmodels/`)
+Sebagai otak logika aplikasi yang menghubungkan View dan Service:
+- `WeatherViewModel` ([lib/viewmodels/weather_viewmodel.dart](lib/viewmodels/weather_viewmodel.dart)): Mewarisi `ChangeNotifier`. Mengatur state status cuaca (`WeatherStatus`: *initial*, *loading*, *success*, *error*) dan status pencarian (`SearchStatus`). Ketika data selesai diunduh atau lokasi diubah, ViewModel memanggil `notifyListeners()` sehingga UI diperbarui secara otomatis.
 
-4. **View Layer (`lib/views/` & `lib/widgets/`)**:
-   - Antarmuka berbasis Material 3 yang reaktif menggunakan `Consumer<WeatherViewModel>`, memisahkan tampilan dengan logika bisnis secara tegas.
+### 4. View Layer (`lib/views/` & `lib/widgets/`)
+Antarmuka pengguna berbasis Flutter Material 3 yang bersifat reaktif:
+- Menggunakan widget `Consumer<WeatherViewModel>` untuk mendengarkan perubahan data di ViewModel tanpa memuat ulang (*rebuild*) seluruh layar.
 
 ---
 
-## 🌐 Dokumentasi Integrasi REST API (Open-Meteo)
+## 🌐 Implementasi REST API (Open-Meteo)
 
-Data cuaca dan pencarian lokasi diambil langsung dari Open-Meteo tanpa API Key (bebas diakses):
+Aplikasi Naelora terhubung langsung secara *live* dengan **Open-Meteo REST API** (tanpa API key):
 
-### 1. Endpoint Cuaca (Forecast API)
-- **URL**: `https://api.open-meteo.com/v1/forecast`
+### 1. Weather Forecast API
+- **Endpoint**: `https://api.open-meteo.com/v1/forecast`
 - **Metode**: `GET`
-- **Parameter Utama**:
-  - `latitude`: Koordinat lintang kota
-  - `longitude`: Koordinat bujur kota
-  - `current`: `temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m`
-  - `daily`: `weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max`
-  - `timezone`: `auto`
+- **Parameter Request**:
+  | Parameter | Nilai / Format | Keterangan |
+  | :--- | :--- | :--- |
+  | `latitude` | `double` (misal: `-7.4243`) | Koordinat lintang lokasi |
+  | `longitude` | `double` (misal: `109.2302`) | Koordinat bujur lokasi |
+  | `current` | `temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m` | Parameter cuaca terkini |
+  | `daily` | `weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` | Parameter ramalan harian |
+  | `timezone` | `auto` | Zona waktu otomatis sesuai lokasi |
 
-### 2. Endpoint Pencarian Lokasi (Geocoding API)
-- **URL**: `https://geocoding-api.open-meteo.com/v1/search`
+- **Pemetaan Field API ke UI**:
+  - Suhu saat ini: `current.temperature_2m` (°C)
+  - Kelembapan udara: `current.relative_humidity_2m` (%)
+  - Suhu yang dirasakan: `current.apparent_temperature` (°C)
+  - Curah hujan: `current.precipitation` (mm)
+  - Kecepatan angin: `current.wind_speed_10m` (km/j)
+  - Kondisi cuaca: `current.weather_code` (diterjemahkan melalui `WeatherHelper` ke Bahasa Indonesia dan ikon tematik)
+  - Suhu harian: `daily.temperature_2m_max` & `daily.temperature_2m_min`
+  - Peluang hujan: `daily.precipitation_probability_max` (%)
+
+### 2. Geocoding API (Pencarian Lokasi)
+- **Endpoint**: `https://geocoding-api.open-meteo.com/v1/search`
 - **Metode**: `GET`
-- **Parameter Utama**:
-  - `name`: Kata kunci nama kota
-  - `count`: Jumlah hasil maksimum (`10`)
-  - `language`: Bahasa hasil (`id`)
-  - `format`: Format respons (`json`)
+- **Parameter**: `name={query}&count=10&language=id&format=json`
+- **Fitur Debounce**: Pencarian dilengkapi jeda *debounce* 400ms untuk mencegah pemanggilan request berlebihan saat pengguna sedang mengetik.
+
+### 3. Penanganan Kondisi Jaringan (Resilience)
+- **Loading State**: Menampilkan indikator loading halus saat data sedang diambil dari server.
+- **Empty State**: Menampilkan pesan informatif jika pencarian kota tidak ditemukan.
+- **Error State**: Menampilkan kartu error ramah pengguna dengan tombol **"Coba Lagi"** jika terjadi masalah jaringan atau timeout.
 
 ---
 
@@ -118,56 +131,63 @@ Data cuaca dan pencarian lokasi diambil langsung dari Open-Meteo tanpa API Key (
 ```
 weather_app/
 ├── android/
-│   └── app/src/main/AndroidManifest.xml (Internet permission enabled)
+│   ├── app/src/main/AndroidManifest.xml  # Izin akses internet Android
+│   └── gradle.properties                 # Konfigurasi stabilitas kompilasi Kotlin
+├── assets/
+│   └── screenshots/                      # Tempat penyimpanan gambar dokumentasi
 ├── lib/
-│   ├── main.dart                      # Inisialisasi Provider, Theme, & Localizations
+│   ├── main.dart                         # Entry point aplikasi & inisialisasi Provider
 │   ├── models/
-│   │   ├── location_model.dart        # Model data lokasi geocoding & favorit
-│   │   └── weather_model.dart         # Model cuaca terkini & perkiraan harian
+│   │   ├── location_model.dart           # Model data lokasi, koordinat, dan serialisasi
+│   │   └── weather_model.dart            # Model respons cuaca terkini dan ramalan harian
 │   ├── services/
-│   │   ├── storage_service.dart       # SharedPreferences (favorit, riwayat, sesi)
-│   │   └── weather_api_service.dart   # REST API Open-Meteo client (HTTP GET)
+│   │   ├── storage_service.dart          # Local Storage SharedPreferences
+│   │   └── weather_api_service.dart      # HTTP Client request Open-Meteo
 │   ├── theme/
-│   │   └── app_theme.dart             # Material 3 Styling, Colors, & Typography
+│   │   └── app_theme.dart                # Tema Material 3 & palet warna pastel
 │   ├── utils/
-│   │   └── weather_helper.dart        # WMO Weather Code parser (ikon & deskripsi)
+│   │   ├── weather_advice_helper.dart    # Algoritma cerdas fitur "Saran Hari Ini"
+│   │   └── weather_helper.dart           # Penerjemah kode cuaca WMO ke ikon & teks
 │   ├── viewmodels/
-│   │   └── weather_viewmodel.dart     # Pengelolaan State MVVM (ChangeNotifier)
+│   │   └── weather_viewmodel.dart        # Pengelola state logika bisnis MVVM
 │   ├── views/
+│   │   ├── favorites/
+│   │   │   └── favorites_screen.dart     # Layar kelola daftar kota favorit
 │   │   ├── home/
-│   │   │   └── home_screen.dart       # Layar Utama: Cuaca terkini, metrik, harian
-│   │   └── search/
-│   │       └── search_screen.dart     # Layar Cari: Input kota, Favorit, Riwayat
+│   │   │   └── home_screen.dart          # Layar utama cuaca, metrik, & ramalan harian
+│   │   ├── search/
+│   │   │   └── search_screen.dart        # Layar pencarian geocoding & riwayat
+│   │   └── settings/
+│   │       └── settings_screen.dart      # Layar pengaturan unit & manajemen data
 │   └── widgets/
-│       ├── daily_forecast_item.dart   # Widget card perkiraan cuaca per hari
-│       └── metric_card.dart           # Widget card metrik kelembapan, angin, dll.
+│       ├── cute_weather_art.dart         # Ilustrasi vektor awan kawaii custom painter
+│       ├── daily_forecast_item.dart      # Widget kartu ramalan cuaca per hari
+│       ├── metric_card.dart              # Widget kartu metrik responsif (FittedBox)
+│       └── weather_advice_card.dart      # Widget kartu saran aktivitas & pakaian
 ├── test/
-│   ├── api_test.dart                  # Automated integration test REST API
-│   └── widget_test.dart               # Smoke test widget Flutter
-└── pubspec.yaml                       # Dependencies: provider, http, shared_preferences, intl
+│   ├── api_test.dart                     # Automated integration test Open-Meteo API
+│   └── widget_test.dart                  # Smoke test antarmuka Flutter
+└── pubspec.yaml                          # Dependensi: provider, http, shared_preferences, intl
 ```
 
 ---
 
 ## 🚀 Panduan Menjalankan Aplikasi
 
-### Persyaratan:
-1. Flutter SDK (versi 3.13.0 ke atas)
-2. Android Studio atau VS Code
-3. Koneksi internet aktif untuk request API Open-Meteo
-
-### Langkah-langkah:
-1. Buka folder proyek ini di **Android Studio**.
-2. Buka terminal atau jalankan perintah:
+1. **Clone Repository**:
+   ```bash
+   git clone https://github.com/nailaalifatull/H1D024043-responsi-naelora.git
+   cd H1D024043-responsi-naelora
+   ```
+2. **Unduh Dependensi**:
    ```bash
    flutter pub get
    ```
-3. Sambungkan perangkat fisik Android (aktifkan USB Debugging) atau jalankan Emulator Android.
-4. Jalankan aplikasi:
-   ```bash
-   flutter run
-   ```
-5. Untuk memverifikasi integrasi API:
+3. **Jalankan Pengujian API (Opsional)**:
    ```bash
    flutter test test/api_test.dart
+   ```
+4. **Jalankan Aplikasi**:
+   ```bash
+   flutter run
    ```
