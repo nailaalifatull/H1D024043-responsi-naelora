@@ -15,26 +15,19 @@
 
 ---
 
-## Tangkapan Layar Aplikasi (Screenshots)
+## 📱 Tangkapan Layar Aplikasi (Screenshots)
 
 Berikut adalah dokumentasi visual dari setiap layar (*screen*) dan fitur utama aplikasi Naelora:
 
-| 1. Home / Weather Screen | 2. Detail & Saran Cuaca |
-| :---: | :---: |
-| <img width="1080" height="2400" alt="Screenshot_20261126_003331" src="https://github.com/user-attachments/assets/2eb933c6-d54c-470d-93da-9e7bc4839690" />
- | <img width="1080" height="2400" alt="Screenshot_20261126_010229" src="https://github.com/user-attachments/assets/efa76b84-a31a-479b-af6b-ce53e53a3998" />
- <img width="1080" height="2400" alt="Screenshot_20261126_003431" src="https://github.com/user-attachments/assets/3f28f3ff-2d06-4138-865d-291185cf7f94" />
+### 1. Halaman Cuaca Utama & Rekomendasi Cerdas
+| Cuaca Terkini (Home) | Detail Cuaca & Saran Hari Ini | Perkiraan Cuaca Harian |
+| :---: | :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/2eb933c6-d54c-470d-93da-9e7bc4839690" width="230" alt="Home Screen" /><br><sub><b>Cuaca Terkini & Hero Card</b></sub> | <img src="https://github.com/user-attachments/assets/efa76b84-a31a-479b-af6b-ce53e53a3998" width="230" alt="Detail & Saran" /><br><sub><b>4 Metrik & Saran Hari Ini</b></sub> | <img src="https://github.com/user-attachments/assets/3f28f3ff-2d06-4138-865d-291185cf7f94" width="230" alt="Ramalan Harian" /><br><sub><b>Perkiraan Cuaca 7 Hari</b></sub> |
 
- |
-
-| 3. Cari Kota & Hasil API | 4. Kota Favorit & Pengaturan |
-| :---: | :---: |
-| <img width="1080" height="2400" alt="Screenshot_20261126_003451" src="https://github.com/user-attachments/assets/aa2102ee-0a98-44b1-86a8-35934626dc8c" />
-<img width="1080" height="2400" alt="Screenshot_20261126_003506" src="https://github.com/user-attachments/assets/3f76c691-3e74-4f90-a2aa-3f64ab98cc7c" />
-
- | <img width="1080" height="2400" alt="Screenshot_20261126_010453" src="https://github.com/user-attachments/assets/bd2edecd-c099-4acb-aee4-0f80670f7024" />
-<img width="1080" height="2400" alt="Screenshot_20261126_003530" src="https://github.com/user-attachments/assets/ebeff259-015d-44d0-a428-14509cdb62c6" />
-|
+### 2. Fitur Pencarian, Kota Favorit, & Pengaturan
+| Pencarian & Rekomendasi | Hasil Pencarian API | Halaman Kota Favorit | Halaman Pengaturan |
+| :---: | :---: | :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/aa2102ee-0a98-44b1-86a8-35934626dc8c" width="200" alt="Search Screen" /><br><sub><b>Cari Kota & Populer</b></sub> | <img src="https://github.com/user-attachments/assets/3f76c691-3e74-4f90-a2aa-3f64ab98cc7c" width="200" alt="Hasil Pencarian" /><br><sub><b>Hasil Geocoding API</b></sub> | <img src="https://github.com/user-attachments/assets/bd2edecd-c099-4acb-aee4-0f80670f7024" width="200" alt="Kota Favorit" /><br><sub><b>Daftar Kota Favorit</b></sub> | <img src="https://github.com/user-attachments/assets/ebeff259-015d-44d0-a428-14509cdb62c6" width="200" alt="Pengaturan" /><br><sub><b>Menu Pengaturan</b></sub> |
 
 ---
 
