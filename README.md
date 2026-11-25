@@ -10,7 +10,7 @@
 | **NIM** | H1D024043 |
 | **Program Studi** | Informatika |
 | **Fakultas** | Fakultas Teknik |
-| **Mata Kuliah** | Praktikum Pemrograman Bergerak |
+| **Mata Kuliah** | Praktikum Pemrograman Mobile |
 | **Link Repository** | https://github.com/nailaalifatull/H1D024043-responsi-naelora |
 | **Link Youtube** | https://youtu.be/7rcvEJNeeeY |
 
