@@ -11,7 +11,8 @@
 | **Program Studi** | Informatika |
 | **Fakultas** | Fakultas Teknik |
 | **Mata Kuliah** | Praktikum Pemrograman Bergerak |
-| **Tautan Repository** | [https://github.com/nailaalifatull/H1D024043-responsi-naelora](https://github.com/nailaalifatull/H1D024043-responsi-naelora) |
+| **Link Repository** | https://github.com/nailaalifatull/H1D024043-responsi-naelora |
+| **Link Youtube** | https://youtu.be/7rcvEJNeeeY |
 
 ---
 
