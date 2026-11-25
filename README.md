@@ -16,7 +16,7 @@
 
 ---
 
-## 📱 Tangkapan Layar Aplikasi (Screenshots)
+## Screenshots Aplikasi
 
 Berikut adalah dokumentasi visual dari setiap layar (*screen*) dan fitur utama aplikasi Naelora:
 
