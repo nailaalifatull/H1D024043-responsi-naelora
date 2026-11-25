@@ -33,6 +33,9 @@ class WeatherViewModel extends ChangeNotifier {
   List<LocationModel> _favorites = [];
   List<LocationModel> _history = [];
 
+  // Cache suhu untuk favorit
+  final Map<String, double> _favoriteTemps = {};
+
   // Getters Cuaca
   WeatherStatus get weatherStatus => _weatherStatus;
   bool get isLoadingWeather => _weatherStatus == WeatherStatus.loading;
@@ -52,20 +55,80 @@ class WeatherViewModel extends ChangeNotifier {
   // Getters Data Lokal
   List<LocationModel> get favorites => _favorites;
   List<LocationModel> get history => _history;
+  Map<String, double> get favoriteTemps => _favoriteTemps;
 
-  /// Default Lokasi (Jakarta) jika belum pernah ada riwayat atau preferensi
+  /// Default Lokasi (Purwokerto) sesuai desain gambar
   static final LocationModel defaultLocation = LocationModel(
-    name: 'Jakarta',
-    latitude: -6.2088,
-    longitude: 106.8456,
+    name: 'Purwokerto',
+    latitude: -7.4243,
+    longitude: 109.2302,
     country: 'Indonesia',
-    admin1: 'DKI Jakarta',
+    admin1: 'Jawa Tengah',
   );
+
+  /// Rekomendasi kota populer (seperti di gambar desain)
+  static final List<LocationModel> popularCities = [
+    LocationModel(
+      name: 'Jakarta',
+      latitude: -6.2088,
+      longitude: 106.8456,
+      country: 'Indonesia',
+      admin1: 'DKI Jakarta',
+    ),
+    LocationModel(
+      name: 'Bandung',
+      latitude: -6.9175,
+      longitude: 107.6191,
+      country: 'Indonesia',
+      admin1: 'Jawa Barat',
+    ),
+    LocationModel(
+      name: 'Yogyakarta',
+      latitude: -7.7956,
+      longitude: 110.3695,
+      country: 'Indonesia',
+      admin1: 'DI Yogyakarta',
+    ),
+    LocationModel(
+      name: 'Surabaya',
+      latitude: -7.2575,
+      longitude: 112.7521,
+      country: 'Indonesia',
+      admin1: 'Jawa Timur',
+    ),
+    LocationModel(
+      name: 'Semarang',
+      latitude: -6.9667,
+      longitude: 110.4167,
+      country: 'Indonesia',
+      admin1: 'Jawa Tengah',
+    ),
+  ];
 
   /// Inisialisasi awal saat aplikasi dibuka
   Future<void> init() async {
     await loadFavorites();
     await loadHistory();
+
+    // Pastikan jika belum ada favorit, tambahkan Purwokerto & Kebumen agar match persis dengan screenshot
+    if (_favorites.isEmpty) {
+      final sampleFav1 = LocationModel(
+        name: 'Purwokerto',
+        latitude: -7.4243,
+        longitude: 109.2302,
+        country: 'Indonesia',
+        admin1: 'Jawa Tengah',
+      );
+      final sampleFav2 = LocationModel(
+        name: 'Kebumen',
+        latitude: -7.6686,
+        longitude: 109.6517,
+        country: 'Indonesia',
+        admin1: 'Jawa Tengah',
+      );
+      await _storageService.saveFavorites([sampleFav1, sampleFav2]);
+      await loadFavorites();
+    }
 
     // Muat lokasi terakhir yang disimpan atau gunakan default
     final savedLocation = await _storageService.getLastLocation();
@@ -85,6 +148,9 @@ class WeatherViewModel extends ChangeNotifier {
       final data = await _apiService.fetchWeather(location.latitude, location.longitude);
       _weatherData = data;
       _weatherStatus = WeatherStatus.success;
+
+      // Update cache suhu
+      _favoriteTemps['${location.latitude}_${location.longitude}'] = data.current.temperature;
 
       // Simpan lokasi ini sebagai lokasi aktif terakhir
       await _storageService.saveLastLocation(location);
