@@ -7,7 +7,10 @@ import '../../viewmodels/weather_viewmodel.dart';
 import '../../widgets/cute_weather_art.dart';
 import '../../widgets/daily_forecast_item.dart';
 import '../../widgets/metric_card.dart';
+import '../../widgets/weather_advice_card.dart';
+import '../favorites/favorites_screen.dart';
 import '../search/search_screen.dart';
+import '../settings/settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -57,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     else if (vm.isWeatherError)
                       _buildErrorState(vm)
                     else if (vm.weatherData != null)
-                      _buildWeatherContent(vm.weatherData!)
+                      _buildWeatherContent(context, vm.weatherData!)
                     else
                       _buildEmptyState(),
 
@@ -72,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Header Atas (Pill Naelora, Lokasi, Tanggal, dan Tombol Bulat)
+  /// Header Atas (Pill Naelora, Lokasi, Tanggal, dan Tombol-Tombol Aksi)
   Widget _buildTopHeader(
     BuildContext context,
     WeatherViewModel vm,
@@ -145,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Icon(Icons.location_on, size: 16, color: Color(0xFF0284C7)),
                       const SizedBox(width: 4),
                       ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 160),
+                        constraints: const BoxConstraints(maxWidth: 140),
                         child: Text(
                           location?.name ?? 'Purwokerto',
                           style: const TextStyle(
@@ -177,48 +180,39 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
 
-        // Right Actions: Favorite Button & Search Button
+        // Right Actions: Favorite Shortcut, Search Button, Settings Button
         Row(
           children: [
-            // Tombol Favorit Kuning
+            // Shortcut ke Halaman Kota Favorit (Kuning Pastel)
             Container(
-              width: 44,
-              height: 44,
+              width: 40,
+              height: 40,
               decoration: const BoxDecoration(
                 color: Color(0xFFFEF3C7),
                 shape: BoxShape.circle,
               ),
               child: IconButton(
                 padding: EdgeInsets.zero,
-                tooltip: isFav ? 'Hapus dari favorit' : 'Tambah ke favorit',
-                icon: Icon(
+                tooltip: 'Halaman Kota Favorit',
+                icon: const Icon(
                   Icons.star_rounded,
-                  color: isFav ? const Color(0xFFB45309) : const Color(0xFFD97706),
-                  size: 24,
+                  color: Color(0xFFB45309),
+                  size: 22,
                 ),
                 onPressed: () {
-                  if (location != null) {
-                    vm.toggleFavorite(location);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          isFav
-                              ? '${location.name} dihapus dari favorit'
-                              : '${location.name} disimpan ke favorit',
-                        ),
-                        duration: const Duration(seconds: 1),
-                      ),
-                    );
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const FavoritesScreen()),
+                  );
                 },
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 8),
 
             // Tombol Search Bulat Putih
             Container(
-              width: 44,
-              height: 44,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
@@ -234,11 +228,41 @@ class _HomeScreenState extends State<HomeScreen> {
               child: IconButton(
                 padding: EdgeInsets.zero,
                 tooltip: 'Cari Kota',
-                icon: const Icon(Icons.search, color: Color(0xFF0F172A), size: 20),
+                icon: const Icon(Icons.search, color: Color(0xFF0F172A), size: 19),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const SearchScreen()),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 8),
+
+            // Tombol Pengaturan (Settings)
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFF1F5F9)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                tooltip: 'Pengaturan',
+                icon: const Icon(Icons.settings_outlined, color: Color(0xFF0F172A), size: 19),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
                   );
                 },
               ),
@@ -250,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// Konten Cuaca Lengkap saat sukses memuat data
-  Widget _buildWeatherContent(WeatherData weather) {
+  Widget _buildWeatherContent(BuildContext context, WeatherData weather) {
     final current = weather.current;
     final weatherDesc = WeatherHelper.getWeatherDescription(current.weatherCode);
 
@@ -373,7 +397,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisCount: 2,
           crossAxisSpacing: 14,
           mainAxisSpacing: 14,
-          childAspectRatio: 1.35,
+          childAspectRatio: 1.15,
           children: [
             MetricCard(
               icon: Icons.water_drop_rounded,
@@ -406,9 +430,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
 
+        const SizedBox(height: 24),
+
+        // 4. Fitur Cerdas: Saran Hari Ini (Weather Advice Card)
+        WeatherAdviceCard(weather: weather),
+
         const SizedBox(height: 26),
 
-        // 4. Section Title: Perkiraan Cuaca Harian
+        // 5. Section Title: Perkiraan Cuaca Harian
         const Text(
           'Perkiraan Cuaca Harian',
           style: TextStyle(
@@ -419,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 12),
 
-        // 5. List Daily Forecast Item
+        // 6. List Daily Forecast Item
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
